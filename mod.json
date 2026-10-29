@@ -1,0 +1,497 @@
+{
+	"geode": "5.11.2",
+	"gd": {
+		"win": "2.2081",
+		"android": "2.2081",
+		"mac": "2.2081"
+	},
+	"version": "v3.0.0",
+	"id": "unified.predictive-buffer",
+	"name": "Predictive Buffer",
+	"developer": "BASU + prsevend (unified)",
+	"description": "Merged & improved predictive input buffer (from Click Before Frames + Afterflow). Delays early clicks/releases with ghost prediction. Full Android support + clean mobile UI. Not legit.",
+	"tags": ["gameplay", "utility", "cheat"],
+	"links": {
+		"source": "https://github.com/raresdalas1009/-predictive-input-buffer"
+	},
+	"settings": {
+		"cat-general": {
+			"type": "title",
+			"name": "General"
+		},
+		"practice-only": {
+			"type": "bool",
+			"name": "Practice mode only",
+			"description": "Only buffer inputs while in Practice Mode. Recommended for safety.",
+			"default": false
+		},
+		"smart-prediction": {
+			"type": "bool",
+			"name": "Smart prediction (orbs/pads/portals)",
+			"description": "Ghost can use orbs, pads, gravity & speed portals. Turn off if you see glitches.",
+			"default": true
+		},
+		"sim-budget-ms": {
+			"type": "float",
+			"name": "Prediction time budget (ms)",
+			"description": "Max time spent predicting per click. Higher = better long saves, may hitch on dense levels. Mobile: try 4-8.",
+			"default": 6.0,
+			"min": 1.0,
+			"max": 25.0
+		},
+		"auto-budget": {
+			"type": "bool",
+			"name": "Auto time budget",
+			"description": "Automatically adjust budget based on current FPS / performance.",
+			"default": true
+		},
+		"performance-mode": {
+			"type": "bool",
+			"name": "Performance mode",
+			"description": "Reduce prediction quality for smoother gameplay on weak devices.",
+			"default": false
+		},
+		"tps": {
+			"type": "int",
+			"name": "Physics TPS",
+			"description": "Game physics ticks per second. 240 is legit. Other values are not.",
+			"default": 240,
+			"min": 240,
+			"max": 1000
+		},
+		"check-updates": {
+			"type": "bool",
+			"name": "Check for updates on start",
+			"description": "Look for newer versions on GitHub when the game starts.",
+			"default": true
+		},
+
+		"cat-panel": {
+			"type": "title",
+			"name": "In-game Panel & UI"
+		},
+		"panel-auto-hide": {
+			"type": "bool",
+			"name": "Auto-hide panel while playing",
+			"description": "Hide the console/stage panel during active gameplay so it doesn't block the screen. Show it when paused or when you toggle it.",
+			"default": true
+		},
+		"panel-opacity": {
+			"type": "float",
+			"name": "Panel opacity",
+			"description": "Transparency of the in-game panel (0.3 = very transparent, 1.0 = solid).",
+			"default": 0.85,
+			"min": 0.3,
+			"max": 1.0
+		},
+		"panel-scale": {
+			"type": "float",
+			"name": "Panel scale (mobile)",
+			"description": "Size of the panel. Increase on large phones if text is hard to read.",
+			"default": 1.0,
+			"min": 0.7,
+			"max": 1.6
+		},
+		"show-path": {
+			"type": "bool",
+			"name": "Show path view on level start",
+			"description": "Automatically enable path visualization when entering a level.",
+			"default": false
+		},
+		"menu-theme": {
+			"type": "string",
+			"name": "Menu theme",
+			"description": "Color theme of the Buffer menu.",
+			"default": "Purple",
+			"one-of": ["Purple", "Blue", "Green", "Dark", "Pink"]
+		},
+
+		"cat-stages": {
+			"type": "title",
+			"name": "Stages & Horizons"
+		},
+		"custom-ticks": {
+			"type": "int",
+			"name": "Custom stage: max delay (ticks)",
+			"description": "Max delay for CUSTOM stage (all modes except wave). 4 ticks ≈ 1 frame @ 60fps.",
+			"default": 40,
+			"min": 1,
+			"max": 64
+		},
+		"custom-wave-ticks": {
+			"type": "int",
+			"name": "Custom stage: max wave delay (ticks)",
+			"description": "Max delay for CUSTOM stage while in wave.",
+			"default": 20,
+			"min": 0,
+			"max": 64
+		},
+		"ground-horizon": {
+			"type": "int",
+			"name": "Cube / ball / spider lookahead (ticks)",
+			"description": "How far ahead prediction looks for cube, ball, spider. Higher catches later hits but costs more CPU.",
+			"default": 130,
+			"min": 48,
+			"max": 240
+		},
+		"wave-horizon": {
+			"type": "int",
+			"name": "Wave lookahead (ticks)",
+			"description": "How far ahead wave prediction looks (mini wave uses a bit less).",
+			"default": 65,
+			"min": 20,
+			"max": 160
+		},
+		"ship-max-delay": {
+			"type": "int",
+			"name": "Ship: max delay (ticks)",
+			"description": "Maximum delay allowed for ship inputs.",
+			"default": 4,
+			"min": 0,
+			"max": 16
+		},
+
+		"cat-orbs": {
+			"type": "title",
+			"name": "Orbs & Pads"
+		},
+		"orb-assume-hit": {
+			"type": "bool",
+			"name": "Orbs: assume you click them",
+			"description": "Ghost clicks every orb it touches (calculation mode). Very useful on orb-heavy levels.",
+			"default": true
+		},
+		"orb-try-both": {
+			"type": "bool",
+			"name": "Orbs: also try the other choice",
+			"description": "When an orb has two possible outcomes, test both.",
+			"default": true
+		},
+		"orb-align": {
+			"type": "bool",
+			"name": "Orb alignment",
+			"description": "Fine-tune click timing inside orbs for better survival.",
+			"default": true
+		},
+		"orb-align-ticks": {
+			"type": "int",
+			"name": "Orb alignment: max delay (ticks)",
+			"description": "Maximum extra delay used for orb alignment.",
+			"default": 8,
+			"min": 0,
+			"max": 20
+		},
+		"orb-align-ground": {
+			"type": "bool",
+			"name": "Orb alignment: also from ground",
+			"description": "Also consider alignment when jumping from ground into orbs.",
+			"default": false
+		},
+		"orb-timing": {
+			"type": "bool",
+			"name": "Orb timing (precise)",
+			"description": "Try multiple timings inside the orb window and pick the safest middle.",
+			"default": true
+		},
+		"dash-auto-release": {
+			"type": "bool",
+			"name": "Dash orb auto-release",
+			"description": "Automatically release after using dash orbs when safe.",
+			"default": false
+		},
+
+		"cat-modes": {
+			"type": "title",
+			"name": "Mode-specific"
+		},
+		"wave-auto-release": {
+			"type": "bool",
+			"name": "Wave auto-release",
+			"description": "Automatically release in wave when holding would crash.",
+			"default": true
+		},
+		"auto-release-window": {
+			"type": "int",
+			"name": "Auto-release window (ticks)",
+			"description": "How many ticks before a predicted crash the auto-release can fire.",
+			"default": 6,
+			"min": 1,
+			"max": 20
+		},
+		"wave-safety-margin": {
+			"type": "bool",
+			"name": "Wave: safety margin",
+			"description": "Add a small safety margin to wave predictions.",
+			"default": true
+		},
+		"wave-v46": {
+			"type": "bool",
+			"name": "Wave: old v4.6 logic",
+			"description": "Use older wave prediction logic (sometimes better on certain levels).",
+			"default": false
+		},
+		"robot-smart": {
+			"type": "bool",
+			"name": "Robot: smart jumps",
+			"description": "Smarter hold timing for robot mode.",
+			"default": true
+		},
+		"robot-auto-release": {
+			"type": "bool",
+			"name": "Robot auto-release",
+			"description": "Auto-release robot hold when continuing would crash.",
+			"default": false
+		},
+		"spider-smart": {
+			"type": "bool",
+			"name": "Spider: smart flips",
+			"description": "Smarter timing for spider flips.",
+			"default": true
+		},
+		"ufo-smart": {
+			"type": "bool",
+			"name": "UFO: smart flaps",
+			"description": "Smarter flap timing for UFO.",
+			"default": true
+		},
+		"ball-smart": {
+			"type": "bool",
+			"name": "Ball: smart flips",
+			"description": "Smarter flip timing for ball.",
+			"default": true
+		},
+		"swing-smart": {
+			"type": "bool",
+			"name": "Swing: smart flips",
+			"description": "Smarter timing for swing mode.",
+			"default": true
+		},
+		"ship-buffer": {
+			"type": "bool",
+			"name": "Ship: buffer inputs",
+			"description": "Allow buffering in ship mode.",
+			"default": true
+		},
+		"ship-spam-gap": {
+			"type": "int",
+			"name": "Ship: spam gap (ticks)",
+			"description": "Minimum gap between ship inputs considered spam.",
+			"default": 6,
+			"min": 0,
+			"max": 30
+		},
+
+		"cat-advanced": {
+			"type": "title",
+			"name": "Advanced / Experimental"
+		},
+		"full-ghost-state": {
+			"type": "bool",
+			"name": "Full ghost state",
+			"description": "Copy more player state into the ghost (more accurate, slightly heavier).",
+			"default": true
+		},
+		"predict-through-portals": {
+			"type": "bool",
+			"name": "Predict through portals",
+			"description": "Continue prediction after mode/size/dual portals instead of stopping.",
+			"default": true
+		},
+		"predict-moving-objects": {
+			"type": "bool",
+			"name": "Predict moving objects (experimental)",
+			"description": "Attempt to account for moving platforms/hazards. Can be unstable.",
+			"default": false
+		},
+		"avoid-moving-objects": {
+			"type": "bool",
+			"name": "Don't buffer near moving objects",
+			"description": "Skip buffering when close to moving objects to avoid bad predictions.",
+			"default": false
+		},
+		"level-memory": {
+			"type": "bool",
+			"name": "Level memory (learn from runs)",
+			"description": "Remember successful delays on this level and reuse them.",
+			"default": true
+		},
+		"robust-saves": {
+			"type": "bool",
+			"name": "Robust saves",
+			"description": "Stricter checks before accepting a delayed input as safe.",
+			"default": false
+		},
+		"low-latency": {
+			"type": "bool",
+			"name": "Low latency mode",
+			"description": "Prefer faster response over maximum delay. Good for high-refresh or fast gameplay.",
+			"default": false
+		},
+		"cbf-sync": {
+			"type": "bool",
+			"name": "Click Between Frames sync",
+			"description": "Better sync with mid-frame click detection.",
+			"default": true
+		},
+		"ignore-touching-hazards": {
+			"type": "bool",
+			"name": "Ignore hazards you're already touching",
+			"description": "Don't treat already-touching hazards as new crashes.",
+			"default": true
+		},
+		"cube-late-crash": {
+			"type": "int",
+			"name": "Cube: ignore crashes after (ticks)",
+			"description": "Ignore predicted crashes that happen very late after the input.",
+			"default": 90,
+			"min": 30,
+			"max": 200
+		},
+		"more-time-death-spots": {
+			"type": "bool",
+			"name": "More time at death spots",
+			"description": "Spend extra prediction time near places you keep dying.",
+			"default": false
+		},
+
+		"cat-auto": {
+			"type": "title",
+			"name": "Auto features"
+		},
+		"auto-click": {
+			"type": "bool",
+			"name": "Auto-click (practice only)",
+			"description": "In practice mode, automatically click when doing nothing would crash and a click is fully safe.",
+			"default": false
+		},
+		"auto-release-normal-runs": {
+			"type": "bool",
+			"name": "Auto-release in normal runs",
+			"description": "Allow auto-release features even outside practice mode.",
+			"default": false
+		},
+		"wave-spam-gap": {
+			"type": "int",
+			"name": "Wave spam: max gap (ticks)",
+			"description": "Max gap between wave inputs to count as spam.",
+			"default": 16,
+			"min": 0,
+			"max": 40
+		},
+		"wave-spam-streak": {
+			"type": "int",
+			"name": "Spam: inputs in a row",
+			"description": "How many rapid inputs in a row count as spam.",
+			"default": 3,
+			"min": 2,
+			"max": 10
+		},
+
+		"cat-debug": {
+			"type": "title",
+			"name": "Debug"
+		},
+		"debug-console": {
+			"type": "bool",
+			"name": "Windows debug console",
+			"description": "Open a separate Windows console with live log (Windows only). Needs restart.",
+			"default": false,
+			"platforms": ["windows"]
+		},
+		"drift-check": {
+			"type": "bool",
+			"name": "Drift check (debug)",
+			"description": "Extra validation that ghost state matches real player.",
+			"default": false
+		},
+		"perf-log": {
+			"type": "bool",
+			"name": "Performance log (debug)",
+			"description": "Log prediction timing information.",
+			"default": false
+		},
+		"death-log": {
+			"type": "bool",
+			"name": "Death log (debug)",
+			"description": "Log details when the ghost dies.",
+			"default": false
+		},
+		"explain-inputs": {
+			"type": "bool",
+			"name": "Explain every input (debug)",
+			"description": "Verbose logging of why each input was delayed or not.",
+			"default": false
+		},
+		"training-mode": {
+			"type": "bool",
+			"name": "Training mode (hints only)",
+			"description": "Show hints without actually buffering inputs.",
+			"default": false
+		},
+		"death-heatmap": {
+			"type": "bool",
+			"name": "Death heatmap",
+			"description": "Visualize places where you/ghost die frequently.",
+			"default": false
+		},
+		"save-ding": {
+			"type": "bool",
+			"name": "Ding on successful save",
+			"description": "Play a short sound when an early click is successfully delayed.",
+			"default": false
+		},
+		"per-level-settings": {
+			"type": "bool",
+			"name": "Per-level settings",
+			"description": "Remember some settings per level ID.",
+			"default": false
+		},
+
+		"cat-keybinds": {
+			"type": "title",
+			"name": "Keybinds"
+		},
+		"bind-stage": {
+			"type": "keybind",
+			"name": "Cycle stage",
+			"description": "Cycle through prediction stages (1f / 2f / ... / Custom).",
+			"category": "gameplay",
+			"default": ["F6"]
+		},
+		"bind-menu": {
+			"type": "keybind",
+			"name": "Open Buffer menu",
+			"description": "Open the main Buffer menu (also available from Pause).",
+			"category": "universal",
+			"default": ["F8"]
+		},
+		"bind-console": {
+			"type": "keybind",
+			"name": "Show / hide console panel",
+			"description": "Toggle the in-game stage + log panel.",
+			"category": "universal",
+			"default": ["F9"]
+		},
+		"bind-path": {
+			"type": "keybind",
+			"name": "Toggle path view",
+			"description": "Show / hide the predicted path visualization.",
+			"category": "gameplay",
+			"default": ["F10"]
+		},
+		"bind-export": {
+			"type": "keybind",
+			"name": "Copy console log",
+			"description": "Copy the current console log to clipboard.",
+			"category": "universal",
+			"default": ["F11"]
+		},
+		"bind-forget": {
+			"type": "keybind",
+			"name": "Forget this level",
+			"description": "Clear learned memory for the current level.",
+			"category": "gameplay",
+			"default": ["F7"]
+		}
+	}
+}
